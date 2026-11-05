@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Prédio dos agentes</title>
+<meta name="description" content="Os doze agentes da empresa, sala por sala.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231746A2'/%3E%3Crect x='8' y='5' width='16' height='24' fill='%23fff'/%3E%3Crect x='11' y='9' width='10' height='5' fill='%23F5BF36'/%3E%3Crect x='11' y='17' width='10' height='5' fill='%2314213D'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Big+Shoulders+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ceu: #1746A2;
+    --tinta: #14213D;
+    --concreto: #D5DAD6;
+    --sala: #EEF3F1;
+    --luz: #F5BF36;
+    --luz-fraca: #FBE7AE;
+    --jardim: #1F7A5C;
+    --flor: #D6337A;
+    --poco: 52px;
+    --titulo: "Big Shoulders Display", "Arial Narrow", sans-serif;
+    --texto: "Atkinson Hyperlegible", Verdana, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--ceu);
+    color: #fff;
+    font: 400 17px/1.5 var(--texto);
+    overflow-x: clip;
+  }
+
+  .pagina {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 32px 16px 48px;
+    display: grid;
+    gap: 24px 40px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .intro { margin: 0; max-width: 46ch; font-size: 18px; }
+
+  /* Prédio */
+  .predio { container-type: inline-size; position: relative; min-width: 0; }
+  .sol {
+    position: absolute;
+    top: -12px;
+    right: 6%;
+    width: 38cqw;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--luz);
+  }
+  .topo { position: relative; padding: 16px 4px 0; }
+  .letreiro {
+    margin: 0;
+    font: 900 min(11.6cqw, 92px)/.92 var(--titulo);
+    color: #fff;
+    text-wrap: balance;
+    -webkit-text-stroke: min(1.4cqw, 10px) var(--tinta);
+    paint-order: stroke fill;
+  }
+  .postes {
+    height: 22px;
+    margin: 6px 3% 0;
+    border-top: 4px solid var(--tinta);
+    background: repeating-linear-gradient(90deg, var(--tinta) 0 4px, transparent 4px 56px);
+  }
+
+  .andares {
+    position: relative;
+    background: var(--concreto);
+    border: 4px solid var(--tinta);
+    border-bottom: 0;
+  }
+  .andar { position: relative; padding-left: var(--poco); border-bottom: 4px solid var(--tinta); }
+  .andar-nome {
+    margin: 0;
+    padding: 5px 12px 4px;
+    font: 700 15px/1.25 var(--texto);
+    color: var(--tinta);
+    background: var(--concreto);
+  }
+  .salas { display: flex; gap: 6px; padding: 0 6px 6px; }
+
+  .sala {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4px;
+    padding: 8px 8px 0;
+    border: 3px solid var(--tinta);
+    border-radius: 0;
+    background: var(--sala);
+    color: var(--tinta);
+    font: 700 15px/1.15 var(--texto);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color .25s;
+  }
+  .sala:hover { background: var(--luz-fraca); }
+  .sala[aria-pressed="true"] { background: var(--luz); }
+  .sala:focus-visible { outline: 4px solid var(--flor); outline-offset: 2px; position: relative; z-index: 3; }
+  .sala svg { display: block; width: 100%; height: auto; max-height: 112px; }
+
+  /* Poço do elevador */
+  .poco {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--poco);
+    background:
+      linear-gradient(90deg, transparent calc(50% - 1px), #5B6780 calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+      var(--tinta);
+  }
+  .numero {
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+    width: var(--poco);
+    text-align: center;
+    color: #fff;
+    font: 700 19px/1 var(--titulo);
+    z-index: 1;
+  }
+  .numero span { background: var(--tinta); padding: 3px 5px; }
+  .elevador {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    width: calc(var(--poco) - 12px);
+    height: 48px;
+    display: grid;
+    place-items: center;
+    background: var(--luz);
+    border: 3px solid #fff;
+    color: var(--tinta);
+    font: 900 24px/1 var(--titulo);
+    z-index: 2;
+    transition: transform var(--viagem, 0ms) cubic-bezier(.45, .05, .3, 1);
+  }
+
+  /* Chão */
+  .jardim { display: block; width: 100%; height: 34px; margin-top: -4px; position: relative; }
+  .calcada {
+    height: 48px;
+    border-top: 4px solid var(--tinta);
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='24'%3E%3Cpath d='M0 13 Q20 -3 40 13 T80 13 V22 Q60 38 40 22 T0 22z' fill='%2314213D'/%3E%3C/svg%3E") 0 0 / 80px 24px;
+  }
+
+  /* Placa da sala */
+  .placa {
+    background: #fff;
+    color: var(--tinta);
+    border: 4px solid var(--tinta);
+    padding: 20px;
+  }
+  .placa-andar { margin: 0; font-size: 16px; }
+  .placa h2 { margin: 2px 0 14px; font: 900 44px/1 var(--titulo); }
+  .placa h3 { margin: 16px 0 4px; font: 700 17px/1.3 var(--texto); }
+  .placa p { margin: 0; }
+  .placa ul { margin: 0; padding-left: 20px; }
+  .placa li + li { margin-top: 4px; }
+  .fechar {
+    display: none;
+    float: right;
+    min-height: 44px;
+    padding: 0 14px;
+    margin: -6px -6px 0 8px;
+    background: var(--tinta);
+    color: #fff;
+    border: 0;
+    font: 700 16px var(--texto);
+    cursor: pointer;
+  }
+  .fechar:focus-visible { outline: 4px solid var(--flor); outline-offset: 2px; }
+
+  /* Regras */
+  .regras h2 { margin: 0 0 8px; font: 900 34px/1 var(--titulo); }
+  .regras ul { margin: 0; padding-left: 20px; max-width: 62ch; }
+  .regras li + li { margin-top: 4px; }
+
+  @media (max-width: 859px) {
+    .pagina { padding-top: 20px; }
+    .placa {
+      position: fixed;
+      inset: auto 0 0 0;
+      max-height: 62vh;
+      overflow-y: auto;
+      border-width: 4px 0 0;
+      z-index: 10;
+      transform: translateY(100%);
+      visibility: hidden;
+      transition: transform .22s ease-out, visibility 0s .22s;
+    }
+    .placa.aberta { transform: none; visibility: visible; transition: transform .22s ease-out; }
+    .fechar { display: block; }
+    .sala { scroll-margin-top: 16px; }
+  }
+
+  @media (max-width: 479px) {
+    :root { --poco: 40px; }
+    .salas { gap: 4px; padding: 0 4px 4px; }
+    .sala { padding: 6px 4px 0; font-size: 13.5px; hyphens: auto; }
+    .elevador { left: 3px; width: calc(var(--poco) - 6px); }
+  }
+
+  @media (min-width: 860px) {
+    .pagina {
+      grid-template-columns: minmax(0, 1fr) 360px;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas: "predio intro" "predio placa" "regras regras";
+    }
+    .predio { grid-area: predio; }
+    .intro { grid-area: intro; align-self: end; padding-top: 24px; }
+    .placa { grid-area: placa; align-self: start; position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; }
+    .regras { grid-area: regras; }
+    .sala { font-size: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0s !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+<main class="pagina">
+  <p class="intro">Doze agentes trabalham aqui, e a cobertura é sua. Toque em uma sala para ver quem trabalha nela e quando chamar.</p>
+
+  <div class="predio">
+    <div class="sol" aria-hidden="true"></div>
+    <div class="topo">
+      <h1 class="letreiro">Edifício Atendimento</h1>
+      <div class="postes" aria-hidden="true"></div>
+    </div>
+    <div class="andares" id="andares">
+      <div class="poco" aria-hidden="true"></div>
+      <div class="elevador" id="elevador" aria-hidden="true">T</div>
+    </div>
+    <svg class="jardim" viewBox="0 0 600 34" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 34V18C40 2 70 6 110 16S190 30 240 14 330 0 380 14 470 30 520 12 580 6 600 14V34z" fill="#1F7A5C"/>
+      <g fill="#D6337A">
+        <ellipse cx="62" cy="15" rx="7" ry="4"/><ellipse cx="205" cy="24" rx="7" ry="4"/>
+        <ellipse cx="350" cy="14" rx="7" ry="4"/><ellipse cx="500" cy="22" rx="7" ry="4"/>
+      </g>
+    </svg>
+    <div class="calcada" aria-hidden="true"></div>
+  </div>
+
+  <aside class="placa" id="placa" aria-live="polite" tabindex="-1">
+    <button class="fechar" id="fechar" type="button">Fechar</button>
+    <p class="placa-andar" id="placa-andar"></p>
+    <h2 id="placa-nome"></h2>
+    <h3 id="placa-quando-titulo">Chame quando</h3>
+    <p id="placa-quando"></p>
+    <h3 id="placa-faz-titulo">O que faz</h3>
+    <ul id="placa-faz"></ul>
+  </aside>
+
+  <section class="regras">
+    <h2>Regras do prédio</h2>
+    <ul>
+      <li>Ninguém inventa números nem resultados.</li>
+      <li>Quando falta informação, a pergunta vem antes do trabalho.</li>
+      <li>Nada vai ao ar sem o OK do CEO.</li>
+      <li>Dados de uma loja nunca se misturam com os de outra.</li>
+    </ul>
+  </section>
+  <noscript><p>Esta página precisa de JavaScript para mostrar as salas.</p></noscript>
+</main>
+
+<script>
+(function () {
+  var I = '#14213D', B = '#1746A2', G = '#1F7A5C', R = '#D6337A', W = '#fff';
+
+  function pessoa(x, cor) {
+    return '<circle cx="' + x + '" cy="36" r="8" fill="' + I + '"/>' +
+      '<path d="M' + (x - 12) + ' 84V58q0-12 12-12t12 12V84z" fill="' + cor + '"/>';
+  }
+  function mesa(a, b) {
+    return '<rect x="' + a + '" y="60" width="' + (b - a) + '" height="5" fill="' + I + '"/>' +
+      '<rect x="' + (a + 5) + '" y="65" width="4" height="19" fill="' + I + '"/>' +
+      '<rect x="' + (b - 9) + '" y="65" width="4" height="19" fill="' + I + '"/>';
+  }
+  function organograma() {
+    var s = '<rect x="84" y="6" width="146" height="66" fill="' + W + '" stroke="' + I + '" stroke-width="3"/>' +
+      '<path d="M157 22V38M96 38H218" stroke="' + I + '" stroke-width="2" fill="none"/>';
+    var cores = [B, G, R];
+    for (var i = 0; i < 11; i++) {
+      var x = 96 + i * 12.2;
+      s += '<path d="M' + x + ' 38V50" stroke="' + I + '" stroke-width="2"/>' +
+        '<circle cx="' + x + '" cy="55" r="4.6" fill="' + cores[i % 3] + '"/>';
+    }
+    return s + '<circle cx="157" cy="19" r="7" fill="' + I + '"/>';
+  }
+
+  var cenas = {
+    ceo: '<rect x="14" y="14" width="66" height="46" fill="' + B + '"/><path d="M47 14V60M14 37H80" stroke="' + W + '" stroke-width="3"/>' +
+      pessoa(122, R) + mesa(92, 152) +
+      '<path d="M166 42l-8 12 18-8z" fill="' + G + '"/><rect x="160" y="10" width="62" height="36" rx="18" fill="' + G + '"/>' +
+      '<text x="191" y="37" text-anchor="middle" font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="900" font-size="26" fill="' + W + '">OK</text>',
+    'gerente-geral': pessoa(42, B) + organograma(),
+    pesquisador: '<rect x="70" y="10" width="42" height="74" fill="' + W + '" stroke="' + I + '" stroke-width="3"/>' +
+      '<path d="M70 34H112M70 58H112" stroke="' + I + '" stroke-width="3"/>' +
+      '<rect x="76" y="16" width="6" height="18" fill="' + B + '"/><rect x="84" y="19" width="6" height="15" fill="' + R + '"/><rect x="92" y="15" width="7" height="19" fill="' + G + '"/>' +
+      '<rect x="76" y="41" width="7" height="17" fill="' + G + '"/><rect x="85" y="44" width="6" height="14" fill="' + B + '"/><rect x="93" y="40" width="6" height="18" fill="' + R + '"/>' +
+      pessoa(28, G) + '<circle cx="50" cy="42" r="10" fill="' + W + '" stroke="' + R + '" stroke-width="4"/><path d="M43 50L36 58" stroke="' + R + '" stroke-width="5"/>',
+    contador: pessoa(30, B) + mesa(8, 112) + '<rect x="60" y="20" width="42" height="40" rx="3" fill="' + I + '"/><rect x="65" y="25" width="32" height="8" fill="#7FD6A8"/>' +
+      '<g fill="' + W + '"><rect x="65" y="37" width="8" height="6"/><rect x="77" y="37" width="8" height="6"/><rect x="89" y="37" width="8" height="6"/><rect x="65" y="47" width="8" height="6"/><rect x="77" y="47" width="8" height="6"/><rect x="89" y="47" width="8" height="6"/></g>',
+    analista: pessoa(24, R) + '<rect x="46" y="10" width="68" height="52" fill="' + W + '" stroke="' + I + '" stroke-width="3"/>' +
+      '<rect x="55" y="38" width="10" height="20" fill="' + B + '"/><rect x="70" y="28" width="10" height="30" fill="' + G + '"/><rect x="85" y="44" width="10" height="14" fill="' + R + '"/><rect x="100" y="20" width="8" height="38" fill="' + B + '"/>' +
+      '<path d="M34 54L52 44" stroke="' + I + '" stroke-width="4"/>',
+    desenvolvedor: pessoa(28, G) + mesa(6, 114) + '<rect x="54" y="16" width="56" height="38" fill="' + I + '"/>' +
+      '<rect x="60" y="23" width="24" height="4" fill="#7FD6A8"/><rect x="66" y="31" width="32" height="4" fill="' + W + '"/><rect x="66" y="39" width="20" height="4" fill="#F49AC1"/>' +
+      '<rect x="78" y="54" width="8" height="6" fill="' + I + '"/>',
+    'web-designer': pessoa(26, R) + mesa(6, 114) + '<rect x="56" y="8" width="32" height="52" rx="5" fill="' + I + '"/><rect x="60" y="14" width="24" height="40" fill="' + W + '"/>' +
+      '<rect x="63" y="18" width="18" height="10" fill="' + B + '"/><rect x="63" y="32" width="18" height="3" fill="' + I + '"/><rect x="63" y="38" width="12" height="3" fill="' + I + '"/><rect x="63" y="45" width="18" height="6" fill="' + G + '"/>' +
+      '<circle cx="102" cy="22" r="7" fill="' + R + '"/><circle cx="102" cy="38" r="7" fill="' + G + '"/><circle cx="102" cy="53" r="6" fill="' + B + '"/>',
+    testador: '<rect x="10" y="10" width="54" height="66" fill="' + W + '" stroke="' + I + '" stroke-width="3"/>' +
+      '<path d="M18 24l4 5 8-9M18 42l4 5 8-9" stroke="' + G + '" stroke-width="4" fill="none"/><path d="M19 58l9 9M28 58l-9 9" stroke="' + R + '" stroke-width="4"/>' +
+      '<path d="M36 25H56M36 43H56M36 63H56" stroke="' + I + '" stroke-width="3"/>' +
+      pessoa(92, B) + '<rect x="70" y="48" width="12" height="20" rx="2" fill="' + I + '"/>',
+    'dev-seguranca': pessoa(26, I) + mesa(6, 114) + '<path d="M66 28V22a15 15 0 0 1 30 0V28" stroke="' + I + '" stroke-width="6" fill="none"/>' +
+      '<rect x="56" y="26" width="50" height="34" rx="3" fill="' + B + '"/><circle cx="81" cy="39" r="5" fill="' + W + '"/><rect x="79" y="40" width="4" height="12" fill="' + W + '"/>',
+    copywriter: pessoa(28, G) + mesa(6, 114) + '<rect x="66" y="14" width="30" height="36" fill="' + W + '" stroke="' + I + '" stroke-width="3"/><path d="M72 23H90M72 31H90M72 39H84" stroke="' + I + '" stroke-width="2.5"/>' +
+      '<rect x="56" y="44" width="50" height="16" fill="' + R + '"/><g fill="' + W + '"><circle cx="65" cy="52" r="2.5"/><circle cx="74" cy="52" r="2.5"/><circle cx="83" cy="52" r="2.5"/><circle cx="92" cy="52" r="2.5"/></g>',
+    'gestor-de-trafego': pessoa(22, B) + '<path d="M34 48L56 34V66L34 56z" fill="' + R + '"/>' +
+      '<rect x="92" y="52" width="4" height="32" fill="' + I + '"/><circle cx="94" cy="36" r="20" fill="' + I + '"/><circle cx="94" cy="36" r="14" fill="' + W + '"/><circle cx="94" cy="36" r="7" fill="' + R + '"/>',
+    vendedor: pessoa(28, R) + pessoa(92, G) + '<path d="M38 62H82" stroke="' + I + '" stroke-width="6"/>' +
+      '<rect x="42" y="6" width="36" height="20" rx="10" fill="' + B + '"/><g fill="' + W + '"><circle cx="52" cy="16" r="2.5"/><circle cx="60" cy="16" r="2.5"/><circle cx="68" cy="16" r="2.5"/></g>',
+    atendente: pessoa(32, R) + '<rect x="4" y="58" width="112" height="26" fill="' + B + '"/><rect x="4" y="58" width="112" height="5" fill="' + I + '"/>' +
+      '<rect x="56" y="10" width="56" height="15" rx="7.5" fill="' + G + '"/><rect x="66" y="31" width="46" height="15" rx="7.5" fill="' + W + '" stroke="' + I + '" stroke-width="2"/>'
+  };
+
+  var andares = [
+    { sinal: 'C', local: 'Cobertura', nome: 'Sala do CEO', salas: [
+      { id: 'ceo', nome: 'CEO: você', largo: 1, titulo: 'O que você faz', quando: 'A ideia é sua. Tudo começa com um pedido seu e termina com o seu OK.',
+        faz: ['Faz o pedido à empresa', 'Decide o que depende de uma escolha', 'Dá o OK antes de qualquer coisa ir ao ar'] } ] },
+    { sinal: '5', local: '5º andar', nome: 'Gerência', salas: [
+      { id: 'gerente-geral', nome: 'Gerente-geral', largo: 1, quando: 'Você tem um pedido novo ou que envolve mais de uma área.',
+        faz: ['Divide o trabalho entre os agentes e define a ordem', 'Confere se tudo combina e tem fonte', 'Devolve o que está errado e só entrega o que está certo'] } ] },
+    { sinal: '4', local: '4º andar', nome: 'Estudos e números', salas: [
+      { id: 'pesquisador', nome: 'Pesquisador', quando: 'Falta conhecer o mercado, o público ou os concorrentes, ou é preciso comparar ferramentas.',
+        faz: ['Compara as opções de atendimento no WhatsApp, com preço e risco', 'Estuda as lojas e os clientes que chegam pelos anúncios', 'Separa fato de opinião e cita a fonte'] },
+      { id: 'contador', nome: 'Contador', quando: 'Você precisa saber quanto cobrar de cada loja ou quanto custa operar o atendente.',
+        faz: ['Levanta os custos de mensagem, IA, servidor e tempo', 'Mostra a conta, com cada premissa identificada', 'Calcula preço mínimo, margem e ponto de equilíbrio'] },
+      { id: 'analista', nome: 'Analista', quando: 'Você quer saber onde cortar gasto ou o que medir.',
+        faz: ['Escolhe poucas métricas para cada decisão', 'Aponta cortes com valor, evidência e risco', 'Diz o que os dados não mostram'] } ] },
+    { sinal: '3', local: '3º andar', nome: 'Oficina do produto', salas: [
+      { id: 'desenvolvedor', nome: 'Desenvolvedor', quando: 'Chegou a hora de escrever ou alterar o código do atendente.',
+        faz: ['Trabalha em passos pequenos, que rodam e podem ser testados', 'Explica em linguagem simples o que mudou', 'Pede a sua escolha nas decisões de peso'] },
+      { id: 'web-designer', nome: 'Web designer', quando: 'Uma tela precisa parecer produto profissional e funcionar bem no celular.',
+        faz: ['Começa pela tarefa de quem vai usar a tela', 'Desenha primeiro para o celular', 'Deixa claro de qual loja são os dados na tela'] } ] },
+    { sinal: '2', local: '2º andar', nome: 'Qualidade e segurança', salas: [
+      { id: 'testador', nome: 'Testador', quando: 'Algo mudou ou está perto de ser publicado.',
+        faz: ['Usa o produto como um cliente de verdade', 'Tenta quebrar com perguntas difíceis e pedidos absurdos', 'Lista o que quebra e como reproduzir'] },
+      { id: 'dev-seguranca', nome: 'Dev de segurança', quando: 'Algo vai ser publicado e precisa de uma revisão de brechas antes.',
+        faz: ['Procura senhas no código e dados expostos', 'Confere entradas sem validação e a separação entre lojas', 'Diz o que foi coberto e o que ficou de fora'] } ] },
+    { sinal: '1', local: '1º andar', nome: 'Divulgação', salas: [
+      { id: 'copywriter', nome: 'Copywriter', quando: 'Você precisa de texto que venda: página, anúncio, oferta ou mensagem.',
+        faz: ['Escreve duas ou três versões e recomenda uma', 'Não promete resultado garantido', 'Lista cada promessa para você conferir'] },
+      { id: 'gestor-de-trafego', nome: 'Gestor de tráfego', quando: 'Vai montar anúncios ou ideias de público para Meta e Google.',
+        faz: ['Monta estrutura, públicos e copy por plataforma', 'Segue as suas regras de Meta Ads e sobe tudo pausado', 'Alinha a oferta do anúncio com o que o atendente responde'] } ] },
+    { sinal: 'T', local: 'Térreo', nome: 'Recepção', salas: [
+      { id: 'vendedor', nome: 'Vendedor', quando: 'Você precisa abordar um cliente ou retomar uma conversa parada.',
+        faz: ['Escreve mensagens curtas, próprias para WhatsApp', 'Monta a sequência de follow-ups', 'Prepara respostas para objeções, e o envio depende de você'] },
+      { id: 'atendente', nome: 'Atendente', quando: 'Um cliente da loja tem uma dúvida.',
+        faz: ['Responde só com o que a loja oferece', 'Passa para um humano em negociação, crédito e reclamação', 'Admite que é automático quando perguntam'] } ] }
+  ];
+
+  var caixa = document.getElementById('andares');
+  var elevador = document.getElementById('elevador');
+  var placa = document.getElementById('placa');
+  var fechar = document.getElementById('fechar');
+  var celular = window.matchMedia('(max-width: 859px)');
+  var semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var indice = {};
+  var atual = null, salaAberta = null, timer = null;
+
+  andares.forEach(function (andar, n) {
+    var el = document.createElement('section');
+    el.className = 'andar';
+    el.setAttribute('aria-label', andar.local + ', ' + andar.nome);
+    el.innerHTML = '<div class="numero" aria-hidden="true"><span>' + andar.sinal + '</span></div>' +
+      '<h2 class="andar-nome">' + andar.nome + '</h2><div class="salas"></div>';
+    var fileira = el.querySelector('.salas');
+    andar.salas.forEach(function (s) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sala';
+      b.setAttribute('aria-pressed', 'false');
+      var largura = s.largo ? 240 : 120;
+      b.innerHTML = '<span>' + s.nome + '</span><svg viewBox="0 0 ' + largura + ' 84" aria-hidden="true">' + cenas[s.id] + '</svg>';
+      b.addEventListener('click', function () { escolher(s.id, true); });
+      fileira.appendChild(b);
+      indice[s.id] = { sala: s, andar: andar, ordem: n, botao: b, el: el };
+    });
+    caixa.appendChild(el);
+  });
+
+  function topoDoAndar(el) {
+    return el.offsetTop + el.offsetHeight - elevador.offsetHeight - 8;
+  }
+  function moverElevador(item, duracao) {
+    elevador.style.setProperty('--viagem', duracao + 'ms');
+    elevador.style.transform = 'translateY(' + topoDoAndar(item.el) + 'px)';
+    elevador.textContent = item.andar.sinal;
+  }
+  function preencherPlaca(item) {
+    document.getElementById('placa-andar').textContent = item.andar.local + ': ' + item.andar.nome;
+    document.getElementById('placa-nome').textContent = item.sala.nome;
+    document.getElementById('placa-quando').textContent = item.sala.quando;
+    document.getElementById('placa-faz-titulo').textContent = item.sala.titulo || 'O que faz';
+    document.getElementById('placa-faz').innerHTML = item.sala.faz.map(function (t) { return '<li>' + t + '</li>'; }).join('');
+    document.getElementById('placa-quando-titulo').textContent = item.sala.id === 'ceo' ? 'Seu papel' : 'Chame quando';
+  }
+  function escolher(id, doUsuario) {
+    var item = indice[id];
+    var anterior = atual;
+    atual = item;
+    Object.keys(indice).forEach(function (k) { indice[k].botao.setAttribute('aria-pressed', 'false'); });
+    preencherPlaca(item);
+    var distancia = anterior ? Math.abs(anterior.ordem - item.ordem) : andares.length - 1 - item.ordem;
+    var duracao = semMovimento.matches ? 0 : 220 * distancia + (distancia ? 180 : 0);
+    moverElevador(item, duracao);
+    clearTimeout(timer);
+    timer = setTimeout(function () { item.botao.setAttribute('aria-pressed', 'true'); }, duracao);
+    if (doUsuario && celular.matches) {
+      salaAberta = item.botao;
+      placa.classList.add('aberta');
+      item.botao.scrollIntoView({ block: 'start', behavior: semMovimento.matches ? 'auto' : 'smooth' });
+      fechar.focus({ preventScroll: true });
+    }
+  }
+  function fecharPlaca() {
+    placa.classList.remove('aberta');
+    if (salaAberta) { salaAberta.focus({ preventScroll: true }); salaAberta = null; }
+  }
+  fechar.addEventListener('click', fecharPlaca);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && placa.classList.contains('aberta')) fecharPlaca();
+  });
+
+  if (window.ResizeObserver) {
+    new ResizeObserver(function () { if (atual) moverElevador(atual, 0); else moverElevador(indice.atendente, 0); }).observe(caixa);
+  }
+
+  moverElevador(indice.atendente, 0);
+  setTimeout(function () { escolher('ceo', false); }, 500);
+  preencherPlaca(indice.ceo);
+})();
+</script>
+</body>
+</html>
